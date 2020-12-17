@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Document</title><script src="../js/ajax.js"></script></head><body><div class="box"></div><script>let box = document.querySelector('.box');
+        //获取本地json文件数据
+        window.onload = function() {
+                var url = "../json/xie.json"
+                var request = new XMLHttpRequest();
+                request.open("get", url); /*设置请求方法与路径*/
+                request.send(null); /*不发送数据到服务器*/
+                request.onload = function() { /*XHR对象获取到返回信息后执行*/
+                    if (request.status == 200) { /*返回状态为200，即为数据获取成功*/
+                        var json = JSON.parse(request.responseText);
+                        // for (var i = 0; i < json.length; i++) {
+                        //     console.log(json[i].name);
+                        // }
+                        // inData(json.data);
+                        console.log(json.data);
+                        // renderHtml(json.data)
+                    }
+                }
+            }
+            // //通过获取的数据遍历--pAjax传给php
+        function inData(arr) {
+            console.log(arr);
+            arr.forEach(item => {
+                pAjax({
+                    url: "../api/xie.php",
+                    data: {
+                        Pic: item.mainPic,
+                        uid: item.postID,
+                        name: item.goodsName,
+                        pie: item.price
+                    }
+                }).then(res => {
+                    console.log(res);
+                })
+            })
+        }
+
+        //渲染
+        function renderHtml(data) {
+            console.log(data);
+            data.forEach((item, index) => {
+                let str = '';
+                str = `
+                <img src="${item.mainPic}" alt="">
+                <p>${item.postID}</p>
+                <p>${item.goodsName}</p>
+                <p>${item.price}</p>`
+                box.innerHTML += str;
+            })
+
+        }</script></body></html>
